@@ -16,8 +16,13 @@ namespace FintcsApi.Models
         public LedgerTransaction LedgerTransaction { get; set; } = null!;
 
         [Required]
-        [StringLength(50)]
-        public string VoucherNumber { get; set; } = string.Empty; // Auto-generated
+        public int PayId { get; set; }
+
+        [Required]
+        public int ParticularId { get; set; }
+
+        [Required]
+        public int SocietyId { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -41,6 +46,9 @@ namespace FintcsApi.Models
 
         // 🔹 Amount field to track transaction value
         public decimal Amount { get; set; }
+
+        public string? ChecqueNumber { get; set; }
+        public DateTime? ChecqueDate { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

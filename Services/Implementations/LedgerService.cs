@@ -77,6 +77,8 @@ namespace FintcsApi.Services.Implementations
                 LoanId = dto.LoanId,
                 Debit = dto.Debit,
                 Credit = dto.Credit,
+                ParticularId = dto.ParticularId,
+                PayId = dto.PayId,
                 SocietyId = dto.SocietyId,
                 BankId = dto.BankId,
                 Description = dto.Description,
@@ -89,7 +91,6 @@ namespace FintcsApi.Services.Implementations
             var voucher = new Voucher
             {
                 LedgerTransactionId = transaction.LedgerTransactionId,
-                VoucherNumber = $"VCH-{DateTime.UtcNow:yyyyMMddHHmmssfff}",
                 VoucherType = dto.Debit > 0 ? "Debit" : "Credit",
                 VoucherDate = transaction.TransactionDate,
                 Narration = dto.Description,
@@ -140,6 +141,8 @@ namespace FintcsApi.Services.Implementations
                 LoanId = dto.LoanId,
                 Debit = dto.Debit,
                 Credit = dto.Credit,
+                ParticularId = dto.ParticularId,
+                PayId = dto.PayId,
                 SocietyId = dto.SocietyId,
                 BankId = dto.BankId,
                 Description = dto.Description,
@@ -152,7 +155,6 @@ namespace FintcsApi.Services.Implementations
             var voucher = new Voucher
             {
                 LedgerTransactionId = transaction.LedgerTransactionId,
-                VoucherNumber = $"VCH-{DateTime.UtcNow:yyyyMMddHHmmssfff}",
                 VoucherType = dto.Debit > 0 ? "Debit" : "Credit",
                 VoucherDate = transaction.TransactionDate,
                 Narration = dto.Description,

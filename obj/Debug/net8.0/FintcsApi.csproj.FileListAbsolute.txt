@@ -609,3 +609,4 @@ C:\Users\krita\Downloads\fintcssparallel\fintcss\bin\Debug\net8.0\FintcsApi.runt
 C:\Users\krita\Downloads\fintcssparallel\fintcss\bin\Debug\net8.0\FintcsApi.pdb
 C:\Users\krita\Downloads\fintcssparallel\fintcss\obj\Debug\net8.0\FintcsApi.genruntimeconfig.cache
 C:\Users\krita\Downloads\fintcssparallel\fintcss\obj\Debug\net8.0\ref\FintcsApi.dll
+C:\Users\krita\Downloads\fintcss\obj\Debug\net8.0\FintcsApi.sourcelink.json

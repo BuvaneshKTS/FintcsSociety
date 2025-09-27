@@ -8,18 +8,18 @@ namespace FintcsApi.Services.Interfaces
     public interface IMemberService
     {
         // Create a new member for a specific society
-        Task<(bool Success, string Message, MemberDto? Data)> CreateMemberAsync(int societyId, MemberCreateUpdateDto dto);
+        Task<ApiResponse<bool>> CreateMemberAsync(int societyId, MemberCreateUpdateDto dto);
 
         // Get a member by its Id
-        Task<(bool Success, string Message, MemberDto? Data)> GetMemberByIdAsync(int memberId);
+        Task<ApiResponse<MemberDto>> GetMemberByIdAsync(int memberId);
 
         // Get all members of a specific society
-        Task<(bool Success, string Message, List<MemberDto> Data)> GetAllMembersBySocietyAsync(int societyId);
+        Task<ApiResponse<List<MemberDto>>> GetAllMembersBySocietyAsync(int societyId);
 
         // Update an existing member by Id
-        Task<(bool Success, string Message)> UpdateMemberAsync(int memberId, MemberCreateUpdateDto dto);
+        Task<ApiResponse<bool>> UpdateMemberAsync(int memberId, MemberCreateUpdateDto dto);
 
         // Delete a member by Id
-        Task<(bool Success, string Message)> DeleteMemberAsync(int memberId);
+        Task<ApiResponse<bool>> DeleteMemberAsync(int memberId);
     }
 }

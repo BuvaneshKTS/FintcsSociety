@@ -22,10 +22,10 @@ namespace FintcsApi.Services.Implementations
         }
 
         // Create a new member
-        public async Task<(bool Success, string Message, MemberDto? Data)> CreateMemberAsync(int societyId, MemberCreateUpdateDto dto)
+        public async Task<ApiResponse<bool>> CreateMemberAsync(int societyId, MemberCreateUpdateDto dto)
         {
             var society = await _context.Societies.FindAsync(societyId);
-            if (society == null) return (false, "Society not found", null);
+            if (society == null) return ApiResponse<bool>.ErrorResponse("Society not found");
 
             var member = new Member
             {
@@ -61,36 +61,36 @@ namespace FintcsApi.Services.Implementations
             _context.Members.Add(member);
             await _context.SaveChangesAsync();
 
-            // Create default ledgers for the new member
             await _ledgerService.CreateDefaultLedgersForMemberAsync(member.Id);
 
-            return (true, "Member created successfully", MapToDto(member));
+            return ApiResponse<bool>.SuccessResponse(true, "Member created successfully");
         }
 
         // Get member by Id
-        public async Task<(bool Success, string Message, MemberDto? Data)> GetMemberByIdAsync(int memberId)
+        public async Task<ApiResponse<MemberDto>> GetMemberByIdAsync(int memberId)
         {
             var member = await _context.Members.AsNoTracking().FirstOrDefaultAsync(m => m.Id == memberId);
-            if (member == null) return (false, "Member not found", null);
-            return (true, "Member retrieved successfully", MapToDto(member));
+            if (member == null) return ApiResponse<MemberDto>.ErrorResponse("Member not found");
+
+            return ApiResponse<MemberDto>.SuccessResponse(MapToDto(member), "Member retrieved successfully");
         }
 
         // Get all members of a society
-        public async Task<(bool Success, string Message, List<MemberDto> Data)> GetAllMembersBySocietyAsync(int societyId)
+        public async Task<ApiResponse<List<MemberDto>>> GetAllMembersBySocietyAsync(int societyId)
         {
             var members = await _context.Members.AsNoTracking()
                                 .Where(m => m.SocietyId == societyId)
                                 .ToListAsync();
 
             var dtos = members.Select(MapToDto).ToList();
-            return (true, "Members retrieved successfully", dtos);
+            return ApiResponse<List<MemberDto>>.SuccessResponse(dtos, "Members retrieved successfully");
         }
 
         // Update member
-        public async Task<(bool Success, string Message)> UpdateMemberAsync(int memberId, MemberCreateUpdateDto dto)
+        public async Task<ApiResponse<bool>> UpdateMemberAsync(int memberId, MemberCreateUpdateDto dto)
         {
             var member = await _context.Members.FindAsync(memberId);
-            if (member == null) return (false, "Member not found");
+            if (member == null) return ApiResponse<bool>.ErrorResponse("Member not found");
 
             member.Name = dto.Name;
             member.FHName = dto.FHName;
@@ -120,19 +120,29 @@ namespace FintcsApi.Services.Implementations
             member.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            return (true, "Member updated successfully");
+            return ApiResponse<bool>.SuccessResponse(true, "Member updated successfully");
         }
 
         // Delete member
-        public async Task<(bool Success, string Message)> DeleteMemberAsync(int memberId)
+        public async Task<ApiResponse<bool>> DeleteMemberAsync(int memberId)
         {
             var member = await _context.Members.FindAsync(memberId);
-            if (member == null) return (false, "Member not found");
+            if (member == null)
+                return ApiResponse<bool>.ErrorResponse("Member not found");
 
+            // 1️⃣ Delete related ledger accounts first
+            var ledgers = _context.LedgerAccounts.Where(l => l.MemberId == memberId);
+            _context.LedgerAccounts.RemoveRange(ledgers);
+
+            // 2️⃣ Delete the member
             _context.Members.Remove(member);
+
+            // 3️⃣ Save changes
             await _context.SaveChangesAsync();
-            return (true, "Member deleted successfully");
+
+            return ApiResponse<bool>.SuccessResponse(true, "Member and related ledger accounts deleted successfully");
         }
+
 
         // Map Member to MemberDto
         private MemberDto MapToDto(Member m)

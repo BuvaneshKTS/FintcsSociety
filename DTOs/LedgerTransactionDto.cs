@@ -8,6 +8,9 @@ namespace FintcsApi.DTOs
         public int? MemberId { get; set; }
         public int? LoanId { get; set; }
 
+        public int ParticularId { get; set; }
+        public int PayId { get; set; }
+
         public decimal Debit { get; set; } = 0;
         public decimal Credit { get; set; } = 0;
 

@@ -112,7 +112,7 @@ namespace FintcsApi.Services.Implementations
 
             // Loan ledger entries
             var loanLedger = await _context.LedgerAccounts
-                .FirstOrDefaultAsync(l => l.MemberId == member.Id && l.AccountName == $"{loanType.Name} Loan Ledger");
+                .FirstOrDefaultAsync(l => l.MemberId == member.Id && l.AccountName == $"{member.Id}{loanType.Name} Loan Ledger");
 
             if (loanLedger != null)
             {

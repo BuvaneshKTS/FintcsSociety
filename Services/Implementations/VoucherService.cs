@@ -29,7 +29,6 @@ namespace FintcsApi.Services.Implementations
                 // Create voucher
                 var voucher = new Voucher
                 {
-                    VoucherNumber = $"VCH-{DateTime.UtcNow:yyyyMMddHHmmss}",
                     VoucherType = dto.VoucherType,
                     MemberId = dto.MemberId,
                     LoanId = dto.LoanId,

@@ -15,6 +15,12 @@ namespace FintcsApi.Models
         [ForeignKey("LedgerAccountId")]
         public LedgerAccount LedgerAccount { get; set; } = null!;
 
+        [Required]
+        public int ParticularId { get; set; }
+
+        [Required]
+        public int PayId { get; set; }
+
         public int? MemberId { get; set; }
         public int? LoanId { get; set; }
 

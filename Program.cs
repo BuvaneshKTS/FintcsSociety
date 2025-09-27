@@ -117,7 +117,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("AllowAll");       // Must be BEFORE Authentication & Authorization
+app.UseCors();      // Must be BEFORE Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
