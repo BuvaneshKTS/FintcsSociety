@@ -69,25 +69,45 @@ namespace FintcsApi.Controllers
         }
 
         [HttpPost("other-ledger-transaction")]
-public async Task<IActionResult> RecordOtherLedgerTransactionAsync([FromBody] LedgerTransactionDto dto)
-{
-    if (!ModelState.IsValid)
-        return BadRequest(new { success = false, message = "Invalid input", errors = ModelState });
+        [Authorize]
+        public async Task<IActionResult> RecordOtherLedgerTransactionAsync([FromBody] LedgerTransactionDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new { success = false, message = "Invalid input", errors = ModelState });
 
-    await _ledgerService.RecordOtherLedgerTransactionAsync(dto);
-    return Ok(new { success = true, message = "Transaction recorded successfully" });
-}
+            await _ledgerService.RecordOtherLedgerTransactionAsync(dto);
+            return Ok(new { success = true, message = "Transaction recorded successfully" });
+        }
 
-[HttpPost("create-other-ledger")]
-[Authorize(Roles = "admin")]
-public async Task<IActionResult> CreateOtherLedger([FromBody] LedgerCreateDto dto)
-{
-    if (!ModelState.IsValid)
-        return BadRequest(new { success = false, message = "Invalid input", errors = ModelState });
+        [HttpPost("create-other-ledger")]
+        [Authorize]
+        public async Task<IActionResult> CreateOtherLedger([FromBody] LedgerCreateDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new { success = false, message = "Invalid input", errors = ModelState });
 
-    await _ledgerService.CreateOtherLedgerAsync(dto.MemberId, dto.AccountName, dto.InitialBalance);
-    return Ok(new { success = true, message = "Ledger created successfully" });
-}
+            await _ledgerService.CreateOtherLedgerAsync(dto.MemberId, dto.AccountName, dto.InitialBalance);
+            return Ok(new { success = true, message = "Ledger created successfully" });
+        }
+
+        [HttpGet("all")]
+        [Authorize] // Any authorized user
+        public async Task<IActionResult> GetAllLedgerAccounts()
+        {
+            var ledgers = await _ledgerService.GetAllLedgerAccountsAsync();
+            return Ok(new { success = true, data = ledgers });
+        }
+
+        [HttpGet("{id}")]
+        [Authorize] // Any authorized user
+        public async Task<IActionResult> GetLedgerAccountById(int id)
+        {
+            var ledger = await _ledgerService.GetLedgerAccountByIdAsync(id);
+            if (ledger == null)
+                return NotFound(new { success = false, message = "Ledger not found" });
+
+            return Ok(new { success = true, data = ledger });
+        }
 
     }
 }

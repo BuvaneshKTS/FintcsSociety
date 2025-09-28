@@ -13,16 +13,144 @@ namespace FintcsApi.Services.Implementations
     public class LoanService : ILoanService
     {
         private readonly AppDbContext _context;
+        private readonly ILoanTypeService _loanTypeService;
+        private readonly ILedgerService _ledgerService;
+        private readonly IVoucherService _voucherService;
 
-        public LoanService(AppDbContext context)
+        public LoanService(AppDbContext context, ILoanTypeService loanTypeService, ILedgerService ledgerService, IVoucherService voucherService)
         {
             _context = context;
+            _loanTypeService = loanTypeService;
+            _ledgerService = ledgerService;
+            _voucherService = voucherService;
         }
+
+        // public async Task<ApiResponse<LoanDto>> CreateLoanAsync(LoanCreateUpdateDto dto)
+        // {
+        //     try
+        //     {
+        //         Console.WriteLine("Starting loan creation...");
+
+        //         var loan = new Loan
+        //         {
+        //             SocietyId = dto.SocietyId,
+        //             MemberId = dto.MemberId,
+        //             LoanTypeId = dto.LoanTypeId,
+        //             LoanDate = dto.LoanDate,
+        //             LoanAmount = dto.LoanAmount,
+        //             Installments = dto.Installments,
+        //             Purpose = dto.Purpose,
+        //             AuthorizedBy = dto.AuthorizedBy,
+        //             PaymentMode = dto.PaymentMode,
+        //             Status = "Active",
+        //             Bank = dto.Bank,
+        //             ChequeNo = dto.ChequeNo,
+        //             ChequeDate = dto.ChequeDate,
+        //             NetLoan = dto.NetLoan,
+        //             InstallmentAmount = dto.InstallmentAmount,
+        //             NewLoanShare = dto.NewLoanShare,
+        //             PayAmount = dto.PayAmount,
+        //             PreviousLoan = dto.PreviousLoan,
+        //             CreatedAt = DateTime.UtcNow,
+        //             UpdatedAt = DateTime.UtcNow
+        //         };
+
+        //         Console.WriteLine($"Loan object created: MemberId={loan.MemberId}, Amount={loan.LoanAmount}");
+
+        //         _context.Loans.Add(loan);
+        //         await _context.SaveChangesAsync();
+        //         Console.WriteLine($"Loan saved with LoanId={loan.LoanId}");
+
+        //         // Get the saved loan with includes
+        //         loan = await _context.Loans
+        //             .Include(l => l.Member)
+        //             .Include(l => l.LoanType)
+        //             .FirstOrDefaultAsync(l => l.LoanId == loan.LoanId);
+
+        //         Console.WriteLine("Loan retrieved with related entities:");
+        //         Console.WriteLine($"Member: {loan.Member?.Name}, LoanTypeId: {loan.LoanTypeId}");
+
+        //         // Get LoanType from service
+        //         var loanTypeResponse = await _loanTypeService.GetLoanTypeByIdAsync(loan.LoanTypeId);
+        //         var loanType = loanTypeResponse.Data;
+        //         if (loanType == null)
+        //         {
+        //             Console.WriteLine($"LoanType not found for LoanTypeId={loan.LoanTypeId}");
+        //         }
+        //         else
+        //         {
+        //             Console.WriteLine($"LoanType fetched: {loanType.Name}");
+
+        //             // Split loan type name into words
+        //             var loanTypeWords = loanType.Name
+        //                 .ToLower()
+        //                 .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        //             Console.WriteLine($"LoanType words: {string.Join(", ", loanTypeWords)}");
+
+        //             // Get all ledger accounts for the member
+        //             var ledgerAccounts = await _context.LedgerAccounts
+        //                 .Where(la => la.MemberId == loan.MemberId)
+        //                 .ToListAsync();
+
+        //             // Fuzzy match ledger account
+        //             LedgerAccount matchedLedgerAccount = null;
+        //             foreach (var la in ledgerAccounts)
+        //             {
+        //                 var accountName = la.AccountName?.ToLower() ?? "";
+        //                 if (loanTypeWords.All(w => accountName.Contains(w)))
+        //                 {
+        //                     matchedLedgerAccount = la;
+        //                     break;
+        //                 }
+        //             }
+
+        //             if (matchedLedgerAccount != null)
+        //             {
+        //                 Console.WriteLine($"Matched LedgerAccount: LedgerAccountId={matchedLedgerAccount.LedgerAccountId}, AccountName={matchedLedgerAccount.AccountName}");
+        //             }
+        //             else
+        //             {
+        //                 Console.WriteLine($"No matching LedgerAccount found for LoanType '{loanType.Name}'");
+        //             }
+        //         }
+
+        //         // var voucher = new Voucher
+        //         // {
+        //         //     VoucherType = dto.VoucherType,  here we can set Payment by default because it is loan given by society to member
+        //         //     MemberId = dto.MemberId,  we can get dto.MemberId from loan.MemberId                //     LoanId = dto.LoanId,
+        //         //     Narration = dto.Narration,  we can use purpose as narration
+        //         //     Amount = dto.Amount, we can use loan.LoanAmount as amount
+        //         //     BankId = dto.BankId, we can use loan.SocietyBank as bankId
+        //         //     ChecqueNumber = dto.ChequeNumber, we can use loan.ChequeNo as ChequeNumber
+        //         //     ChecqueDate = dto.ChequeDate, we can use loan.ChequeDate as ChequeDate
+        //         //     VoucherDate = dto.VoucherDate, we can use loan.LoanDate as VoucherDate
+        //         //     LedgerTransactionId = dto.LedgerTransactionId, we can use 0 initially
+        //         //     PayId = dto.PayId, we have to generate new payId for voucher
+        //         //     ParticularId = dto.ParticularId, we have to get from LedgerAccounts
+        //         //     SocietyId = dto.SocietyId,
+        //         //     CreatedAt = DateTime.UtcNow
+        //         // };
+        //         _context.Vouchers.Add(voucher);
+        //         await _context.SaveChangesAsync();
+        //         Console.WriteLine("Voucher creation skipped (commented).");
+
+        //         return ApiResponse<LoanDto>.SuccessResponse(MapToDto(loan), "Loan created successfully");
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         Console.WriteLine($"Error creating loan: {ex.Message}");
+        //         return ApiResponse<LoanDto>.ErrorResponse($"Error creating loan: {ex.Message}");
+        //     }
+        // }
 
         public async Task<ApiResponse<LoanDto>> CreateLoanAsync(LoanCreateUpdateDto dto)
         {
             try
             {
+                Console.WriteLine("=== Starting Loan Creation ===");
+
+                // 1️⃣ Create Loan object
                 var loan = new Loan
                 {
                     SocietyId = dto.SocietyId,
@@ -47,16 +175,128 @@ namespace FintcsApi.Services.Implementations
                     UpdatedAt = DateTime.UtcNow
                 };
 
+                // Console.WriteLine($"Loan object created: MemberId={loan.MemberId}, Amount={loan.LoanAmount}");
+
                 _context.Loans.Add(loan);
                 await _context.SaveChangesAsync();
+                // Console.WriteLine($"Loan saved with LoanId={loan.LoanId}");
 
-                return ApiResponse<LoanDto>.SuccessResponse(MapToDto(loan), "Loan created successfully");
+                // 2️⃣ Reload loan with related entities
+                loan = await _context.Loans
+                    .Include(l => l.Member)
+                    .Include(l => l.LoanType)
+                    .FirstOrDefaultAsync(l => l.LoanId == loan.LoanId);
+
+                // Console.WriteLine($"Loan retrieved: Member={loan.Member?.Name}, LoanTypeId={loan.LoanTypeId}");
+
+                // 3️⃣ Get LoanType from service
+                var loanTypeResponse = await _loanTypeService.GetLoanTypeByIdAsync(loan.LoanTypeId);
+                var loanType = loanTypeResponse.Data;
+
+                LedgerAccount matchedLedgerAccount = null;
+
+                if (loanType == null)
+                {
+                    Console.WriteLine($"LoanType not found for LoanTypeId={loan.LoanTypeId}");
+                }
+                else
+                {
+                    // Console.WriteLine($"LoanType fetched: {loanType.Name}");
+
+                    // Split LoanType name into words for fuzzy matching
+                    var loanTypeWords = loanType.Name
+                        .ToLower()
+                        .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                    // Console.WriteLine($"LoanType words: {string.Join(", ", loanTypeWords)}");
+
+                    // 4️⃣ Get all LedgerAccounts for the member
+                    var ledgerAccounts = await _context.LedgerAccounts
+                        .Where(la => la.MemberId == loan.MemberId)
+                        .ToListAsync();
+
+                    // Console.WriteLine($"Total ledger accounts fetched for MemberId={loan.MemberId}: {ledgerAccounts.Count}");
+
+                    // 5️⃣ Fuzzy match ledger account
+                    foreach (var la in ledgerAccounts)
+                    {
+                        var accountName = la.AccountName?.ToLower() ?? "";
+                        // Console.WriteLine($"Checking LedgerAccountId={la.LedgerAccountId}, AccountName={la.AccountName}");
+
+                        if (loanTypeWords.All(w => accountName.Contains(w)))
+                        {
+                            matchedLedgerAccount = la;
+                            // Console.WriteLine($"Matched LedgerAccount: LedgerAccountId={la.LedgerAccountId}, AccountName={la.AccountName}");
+                            break;
+                        }
+                    }
+
+                    if (matchedLedgerAccount == null)
+                    {
+                        Console.WriteLine($"No matching LedgerAccount found for LoanType '{loanType.Name}'");
+                    }
+                }
+
+                int nextPayId = 1;
+                var lastVoucher = await _context.Vouchers
+                    .OrderByDescending(v => v.PayId)
+                    .FirstOrDefaultAsync();
+                if (lastVoucher != null)
+                    nextPayId = lastVoucher.PayId + 1;
+
+
+                // 6️⃣ Create Voucher
+                var voucher = new Voucher
+                {
+                    VoucherType = "Payment",  // default: Payment
+                    MemberId = loan.MemberId,
+                    LoanId = loan.LoanId,
+                    Narration = loan.Purpose ?? "Loan Disbursement",
+                    Amount = loan.LoanAmount,
+                    BankId = dto.Bank,
+                    ChecqueNumber = dto.ChequeNo ?? null,
+                    ChecqueDate = loan.ChequeDate ?? null,
+                    VoucherDate = loan.LoanDate, 
+                    PayId = nextPayId, // auto create it
+                    ParticularId = matchedLedgerAccount?.LedgerAccountId ?? 0,
+                    SocietyId = dto.SocietyId,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Vouchers.Add(voucher);
+                await _context.SaveChangesAsync();
+                // Console.WriteLine($"Voucher created successfully: VoucherId={voucher.VoucherId}");
+
+                var transaction = new LedgerTransaction
+                {
+                    LedgerAccountId = matchedLedgerAccount?.LedgerAccountId ?? 0,
+                    MemberId = loan.MemberId,
+                    LoanId = loan.LoanId,
+                    Debit = 0,
+                    Credit = loan.LoanAmount,
+                    ParticularId = matchedLedgerAccount?.LedgerAccountId ?? 0,
+                    PayId = nextPayId,
+                    SocietyId = dto.SocietyId,
+                    BankId = dto.Bank,
+                    Description = loan.Purpose ?? "Loan Disbursement",
+                    VoucherId = voucher.VoucherId,
+                    TransactionDate = DateTime.UtcNow
+                };
+
+                _context.LedgerTransactions.Add(transaction);
+                await _context.SaveChangesAsync();
+
+                // 7️⃣ Return success response
+                return ApiResponse<LoanDto>.SuccessResponse(MapToDto(loan), "Loan and Voucher created successfully");
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error creating loan: {ex.Message}");
                 return ApiResponse<LoanDto>.ErrorResponse($"Error creating loan: {ex.Message}");
             }
         }
+
+
 
         public async Task<ApiResponse<IEnumerable<LoanDto>>> GetLoansBySocietyAsync(int societyId)
         {

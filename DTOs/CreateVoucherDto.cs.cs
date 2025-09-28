@@ -6,9 +6,7 @@ namespace FintcsApi.DTOs
 {
     // DTO for creating a voucher
     public class CreateVoucherDto
-    {
-        [Required]
-        public int LedgerTransactionId { get; set; }   // Links to the main transaction
+    {  // Links to the main transaction
 
         [Required]
         public int PayId { get; set; }                 // Payment reference
@@ -32,6 +30,7 @@ namespace FintcsApi.DTOs
 
         [Required]
         public decimal Amount { get; set; }
+        public decimal BankId { get; set; }
 
         public string? ChequeNumber { get; set; }
         public DateTime? ChequeDate { get; set; }
@@ -63,7 +62,6 @@ namespace FintcsApi.DTOs
     public class VoucherDto
     {
         public int VoucherId { get; set; }
-        public int LedgerTransactionId { get; set; }
         public int PayId { get; set; }
         public int ParticularId { get; set; }
         public int SocietyId { get; set; }
@@ -73,6 +71,7 @@ namespace FintcsApi.DTOs
         public int? MemberId { get; set; }
         public int? LoanId { get; set; }
         public decimal Amount { get; set; }
+        public decimal BankId { get; set; }
         public string? ChequeNumber { get; set; }
         public DateTime? ChequeDate { get; set; }
 

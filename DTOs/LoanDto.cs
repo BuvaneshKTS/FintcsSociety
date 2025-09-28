@@ -37,7 +37,7 @@ namespace FintcsApi.DTOs
 
         public string Status { get; set; } = "Active";
 
-        public string? Bank { get; set; }
+        public int Bank { get; set; }
         public string? ChequeNo { get; set; }
         public DateTime? ChequeDate { get; set; }
 
@@ -75,7 +75,7 @@ namespace FintcsApi.DTOs
         [Required]
         public string PaymentMode { get; set; } = "Cash";
 
-        public string? Bank { get; set; }
+        public int Bank { get; set; }
         public string? ChequeNo { get; set; }
         public DateTime? ChequeDate { get; set; }
         public string Status { get; set; } = "Active";

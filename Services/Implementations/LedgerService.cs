@@ -17,6 +17,17 @@ namespace FintcsApi.Services.Implementations
             _context = context;
         }
 
+        public async Task<List<LedgerAccount>> GetAllLedgerAccountsAsync()
+        {
+            return await _context.LedgerAccounts.ToListAsync();
+        }
+
+        public async Task<LedgerAccount?> GetLedgerAccountByIdAsync(int ledgerAccountId)
+        {
+            return await _context.LedgerAccounts
+                .FirstOrDefaultAsync(l => l.LedgerAccountId == ledgerAccountId);
+        }
+
         // Create default ledgers for a member
         public async Task CreateDefaultLedgersForMemberAsync(int memberId)
         {
@@ -87,19 +98,6 @@ namespace FintcsApi.Services.Implementations
 
             _context.LedgerTransactions.Add(transaction);
             await _context.SaveChangesAsync(); // Transaction ID is int now
-
-            var voucher = new Voucher
-            {
-                LedgerTransactionId = transaction.LedgerTransactionId,
-                VoucherType = dto.Debit > 0 ? "Debit" : "Credit",
-                VoucherDate = transaction.TransactionDate,
-                Narration = dto.Description,
-                MemberId = dto.MemberId,
-                LoanId = dto.LoanId
-            };
-
-            _context.Vouchers.Add(voucher);
-            await _context.SaveChangesAsync();
         }
 
         // Create other ledger
@@ -150,19 +148,6 @@ namespace FintcsApi.Services.Implementations
             };
 
             _context.LedgerTransactions.Add(transaction);
-            await _context.SaveChangesAsync();
-
-            var voucher = new Voucher
-            {
-                LedgerTransactionId = transaction.LedgerTransactionId,
-                VoucherType = dto.Debit > 0 ? "Debit" : "Credit",
-                VoucherDate = transaction.TransactionDate,
-                Narration = dto.Description,
-                MemberId = dto.MemberId,
-                LoanId = dto.LoanId
-            };
-
-            _context.Vouchers.Add(voucher);
             await _context.SaveChangesAsync();
         }
     }

@@ -4,6 +4,8 @@ using FintcsApi.Data;
 using FintcsApi.DTOs;
 using FintcsApi.Models;
 using FintcsApi.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace FintcsApi.Services.Implementations
 {
@@ -20,6 +22,13 @@ namespace FintcsApi.Services.Implementations
         {
             if (dto == null)
                 throw new ArgumentNullException(nameof(dto));
+            
+            int nextPayId = 1;
+                var lastVoucher = await _context.Vouchers
+                    .OrderByDescending(v => v.PayId)
+                    .FirstOrDefaultAsync();
+                if (lastVoucher != null)
+                    nextPayId = lastVoucher.PayId + 1;
 
             // Create voucher
             var voucher = new Voucher
@@ -29,11 +38,11 @@ namespace FintcsApi.Services.Implementations
                 LoanId = dto.LoanId,
                 Narration = dto.Narration,
                 Amount = dto.Amount,
+                BankId = dto.BankId,
                 ChecqueNumber = dto.ChequeNumber,
                 ChecqueDate = dto.ChequeDate,
                 VoucherDate = dto.VoucherDate,
-                LedgerTransactionId = dto.LedgerTransactionId,
-                PayId = dto.PayId,
+                PayId = nextPayId,
                 ParticularId = dto.ParticularId,
                 SocietyId = dto.SocietyId,
                 CreatedAt = DateTime.UtcNow
@@ -41,6 +50,8 @@ namespace FintcsApi.Services.Implementations
 
             _context.Vouchers.Add(voucher);
             await _context.SaveChangesAsync();
+
+
 
             return voucher;
         }

@@ -9,9 +9,6 @@ namespace FintcsApi.Models
         [Key]
         public int VoucherId { get; set; } // changed from Guid
 
-        [Required]
-        public int LedgerTransactionId { get; set; }
-
         // [ForeignKey("LedgerTransactionId")]
         // public LedgerTransaction LedgerTransaction { get; set; } = null!;
 
@@ -46,6 +43,7 @@ namespace FintcsApi.Models
 
         // 🔹 Amount field to track transaction value
         public decimal Amount { get; set; }
+        public decimal BankId { get; set; }
 
         public string? ChecqueNumber { get; set; }
         public DateTime? ChecqueDate { get; set; }

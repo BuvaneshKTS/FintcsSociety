@@ -16,6 +16,7 @@ namespace FintcsApi.DTOs
 
         public int SocietyId { get; set; }
         public int? BankId { get; set; }
+        public int VoucherId { get; set; }
 
         public string Description { get; set; } = "";
     }
