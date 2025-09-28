@@ -8,8 +8,10 @@ namespace FintcsApi.DTOs
     public class CreateVoucherDto
     {  // Links to the main transaction
 
-        [Required]
-        public int PayId { get; set; }                 // Payment reference
+        // [Required]
+        // public int PayId { get; set; }                 // Payment reference
+
+        public int? LedgerAccountId { get; set; }
 
         public int ParticularId { get; set; }
 

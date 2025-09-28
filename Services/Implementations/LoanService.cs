@@ -286,6 +286,42 @@ namespace FintcsApi.Services.Implementations
                 _context.LedgerTransactions.Add(transaction);
                 await _context.SaveChangesAsync();
 
+                matchedLedgerAccount.Balance += loan.LoanAmount; // assuming Credit increases balance
+                _context.LedgerAccounts.Update(matchedLedgerAccount);
+                await _context.SaveChangesAsync();
+
+                // now i need to add amount to ledger account using the transaction.LedgerAccountId
+
+                var societyLedger = await _context.LedgerAccounts
+                    .FirstOrDefaultAsync(la => la.AccountName == "Society Cash Account");
+
+                var transaction1 = new LedgerTransaction
+                {
+                    LedgerAccountId = societyLedger?.LedgerAccountId ?? 0,
+                    MemberId = loan.MemberId,
+                    LoanId = loan.LoanId,
+                    Debit = loan.LoanAmount,
+                    Credit = 0,
+                    ParticularId = societyLedger?.LedgerAccountId ?? 0,
+                    PayId = nextPayId,
+                    SocietyId = dto.SocietyId,
+                    BankId = dto.Bank,
+                    Description = loan.Purpose ?? "Loan Disbursement",
+                    VoucherId = voucher.VoucherId,
+                    TransactionDate = DateTime.UtcNow
+                };
+
+                _context.LedgerTransactions.Add(transaction1);
+                await _context.SaveChangesAsync();
+
+                
+                
+                societyLedger.Balance -= loan.LoanAmount; // assuming Credit increases balance
+                _context.LedgerAccounts.Update(societyLedger);
+                await _context.SaveChangesAsync();
+
+                // now i need to add amount to ledger account using the transaction1.LedgerAccountId
+
                 // 7️⃣ Return success response
                 return ApiResponse<LoanDto>.SuccessResponse(MapToDto(loan), "Loan and Voucher created successfully");
             }
