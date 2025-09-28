@@ -88,12 +88,12 @@ namespace FintcsApi.Services.Implementations
 
                 var transaction1 = new LedgerTransaction
                 {
-                    LedgerAccountId = societyLedger.LedgerAccountId ?? 1,
+                    LedgerAccountId = 1,
                     MemberId = dto.MemberId,
                     LoanId = dto.LoanId,
                     Debit = 0,
                     Credit = dto.Amount,
-                    ParticularId = societyLedger.LedgerAccountId ?? 1,
+                    ParticularId = 1,
                     PayId = nextPayId,
                     SocietyId = dto.SocietyId,
                     BankId = (int)dto.BankId,
@@ -138,12 +138,12 @@ namespace FintcsApi.Services.Implementations
 
                 var transaction3 = new LedgerTransaction
                 {
-                    LedgerAccountId = societyLedger.LedgerAccountId ?? 1,
+                    LedgerAccountId = 1,
                     MemberId = dto.MemberId,
                     LoanId = dto.LoanId,
                     Debit = 0,
                     Credit = dto.Amount,
-                    ParticularId = societyLedger.LedgerAccountId ?? 1,
+                    ParticularId = 1,
                     PayId = nextPayId,
                     SocietyId = dto.SocietyId,
                     BankId = (int)dto.BankId,
@@ -187,12 +187,12 @@ namespace FintcsApi.Services.Implementations
 
                 var transaction5 = new LedgerTransaction
                 {
-                    LedgerAccountId = societyLedger.LedgerAccountId ?? 1,
+                    LedgerAccountId = 1,
                     MemberId = dto.MemberId,
                     LoanId = 0,
                     Debit = dto.Amount,
                     Credit = dto.Amount,
-                    ParticularId = societyLedger.LedgerAccountId ?? 1,
+                    ParticularId = 1,
                     PayId = nextPayId,
                     SocietyId = dto.SocietyId,
                     BankId = (int)dto.BankId,

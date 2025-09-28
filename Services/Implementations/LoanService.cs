@@ -258,7 +258,7 @@ namespace FintcsApi.Services.Implementations
                     ChecqueDate = loan.ChequeDate ?? null,
                     VoucherDate = loan.LoanDate, 
                     PayId = nextPayId, // auto create it
-                    ParticularId = matchedLedgerAccount?.LedgerAccountId ?? 0,
+                    ParticularId = matchedLedgerAccount?.LedgerAccountId,
                     SocietyId = dto.SocietyId,
                     CreatedAt = DateTime.UtcNow
                 };
@@ -269,12 +269,12 @@ namespace FintcsApi.Services.Implementations
 
                 var transaction = new LedgerTransaction
                 {
-                    LedgerAccountId = matchedLedgerAccount?.LedgerAccountId ?? 0,
+                    LedgerAccountId = matchedLedgerAccount?.LedgerAccountId,
                     MemberId = loan.MemberId,
                     LoanId = loan.LoanId,
                     Debit = 0,
                     Credit = loan.LoanAmount,
-                    ParticularId = matchedLedgerAccount?.LedgerAccountId ?? 0,
+                    ParticularId = matchedLedgerAccount?.LedgerAccountId,
                     PayId = nextPayId,
                     SocietyId = dto.SocietyId,
                     BankId = dto.Bank,
@@ -297,12 +297,12 @@ namespace FintcsApi.Services.Implementations
 
                 var transaction1 = new LedgerTransaction
                 {
-                    LedgerAccountId = societyLedger.LedgerAccountId ?? 1,
+                    LedgerAccountId = 1,
                     MemberId = loan.MemberId,
                     LoanId = loan.LoanId,
                     Debit = loan.LoanAmount,
                     Credit = 0,
-                    ParticularId = societyLedger.LedgerAccountId ?? 1,
+                    ParticularId = 1,
                     PayId = nextPayId,
                     SocietyId = dto.SocietyId,
                     BankId = dto.Bank,
