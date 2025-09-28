@@ -13,6 +13,8 @@ namespace FintcsApi.DTOs
         [Required]
         public int PayId { get; set; }                 // Payment reference
 
+        public int ParticularId { get; set; }
+
         [Required]
         public int SocietyId { get; set; }
 
@@ -35,7 +37,7 @@ namespace FintcsApi.DTOs
         public DateTime? ChequeDate { get; set; }
 
         // Voucher entries
-        public List<VoucherEntryDto> Entries { get; set; } = new();
+        // public List<VoucherEntryDto> Entries { get; set; } = new();
     }
 
     // DTO for each ledger entry in the voucher
@@ -74,6 +76,6 @@ namespace FintcsApi.DTOs
         public string? ChequeNumber { get; set; }
         public DateTime? ChequeDate { get; set; }
 
-        public List<VoucherEntryDto> Entries { get; set; } = new();
+        // public List<VoucherEntryDto> Entries { get; set; } = new();
     }
 }

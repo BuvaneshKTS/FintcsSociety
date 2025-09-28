@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using FintcsApi.DTOs;
+using FintcsApi.Models;
 using FintcsApi.Services.Interfaces;
 
 namespace FintcsApi.Controllers
@@ -16,30 +17,33 @@ namespace FintcsApi.Controllers
             _voucherService = voucherService;
         }
 
+        /// <summary>
+        /// Create a new voucher with ledger transactions
+        /// </summary>
         [HttpPost("create")]
         public async Task<IActionResult> CreateVoucher([FromBody] CreateVoucherDto dto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(new { success = false, message = "Invalid input", errors = ModelState });
+            {
+                return BadRequest(ApiResponse<Voucher>.ErrorResponse(
+                    "Invalid input", 
+                    ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList()
+                ));
+            }
 
             try
             {
                 var voucher = await _voucherService.CreateVoucherAsync(dto);
 
-                return Ok(new
-                {
-                    success = true,
-                    message = "Voucher created successfully",
-                    data = voucher
-                });
+                return CreatedAtAction(
+                    nameof(CreateVoucher),
+                    new { id = voucher.VoucherId },
+                    ApiResponse<Voucher>.SuccessResponse(voucher, "Voucher created successfully")
+                );
             }
             catch (System.Exception ex)
             {
-                return BadRequest(new
-                {
-                    success = false,
-                    message = $"Error creating voucher: {ex.Message}"
-                });
+                return BadRequest(ApiResponse<Voucher>.ErrorResponse($"Error creating voucher: {ex.Message}"));
             }
         }
     }

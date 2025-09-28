@@ -12,8 +12,8 @@ namespace FintcsApi.Models
         [Required]
         public int LedgerTransactionId { get; set; }
 
-        [ForeignKey("LedgerTransactionId")]
-        public LedgerTransaction LedgerTransaction { get; set; } = null!;
+        // [ForeignKey("LedgerTransactionId")]
+        // public LedgerTransaction LedgerTransaction { get; set; } = null!;
 
         [Required]
         public int PayId { get; set; }

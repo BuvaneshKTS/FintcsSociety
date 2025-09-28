@@ -7,11 +7,11 @@ namespace FintcsApi.Services.Interfaces
 {
     public interface ILoanService
     {
-        Task<(bool Success, string Message, LoanDto? Data)> CreateLoanAsync(LoanCreateUpdateDto dto);
-        Task<(bool Success, string Message, IEnumerable<LoanDto>? Data)> GetLoansBySocietyAsync(int societyId);
-        Task<(bool Success, string Message, LoanDto? Data)> GetLoanByIdAsync(int loanId);
-        Task<(bool Success, string Message)> UpdateLoanAsync(int loanId, LoanCreateUpdateDto dto);
-        Task<(bool Success, string Message)> DeleteLoanAsync(int loanId);
-        Task<(bool Success, string Message, IEnumerable<LoanDto>? Data)> GetLoansByMemberAsync(int memberId);
+        Task<ApiResponse<LoanDto>> CreateLoanAsync(LoanCreateUpdateDto dto);
+        Task<ApiResponse<IEnumerable<LoanDto>>> GetLoansBySocietyAsync(int societyId);
+        Task<ApiResponse<LoanDto>> GetLoanByIdAsync(int loanId);
+        Task<ApiResponse<object>> UpdateLoanAsync(int loanId, LoanCreateUpdateDto dto);
+        Task<ApiResponse<object>> DeleteLoanAsync(int loanId);
+        Task<ApiResponse<IEnumerable<LoanDto>>> GetLoansByMemberAsync(int memberId);
     }
 }
