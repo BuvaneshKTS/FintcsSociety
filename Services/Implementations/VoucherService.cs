@@ -52,7 +52,9 @@ namespace FintcsApi.Services.Implementations
             await _context.SaveChangesAsync();
 
             var societyLedger = await _context.LedgerAccounts
-                    .FirstOrDefaultAsync(la => la.AccountName == "Society Cash Account");
+                    .FirstOrDefaultAsync(la => la.AccountName == "Society Account");
+            
+            Console.WriteLine("Society Ledger :", societyLedger);
             
             var otherLedger = await _context.LedgerAccounts
                     .FirstOrDefaultAsync(la=> la.LedgerAccountId == dto.ParticularId);
@@ -86,12 +88,12 @@ namespace FintcsApi.Services.Implementations
 
                 var transaction1 = new LedgerTransaction
                 {
-                    LedgerAccountId = societyLedger.LedgerAccountId,
+                    LedgerAccountId = societyLedger.LedgerAccountId ?? 1,
                     MemberId = dto.MemberId,
                     LoanId = dto.LoanId,
                     Debit = 0,
                     Credit = dto.Amount,
-                    ParticularId = societyLedger.LedgerAccountId,
+                    ParticularId = societyLedger.LedgerAccountId ?? 1,
                     PayId = nextPayId,
                     SocietyId = dto.SocietyId,
                     BankId = (int)dto.BankId,
@@ -136,12 +138,12 @@ namespace FintcsApi.Services.Implementations
 
                 var transaction3 = new LedgerTransaction
                 {
-                    LedgerAccountId = societyLedger.LedgerAccountId,
+                    LedgerAccountId = societyLedger.LedgerAccountId ?? 1,
                     MemberId = dto.MemberId,
                     LoanId = dto.LoanId,
                     Debit = 0,
                     Credit = dto.Amount,
-                    ParticularId = societyLedger.LedgerAccountId,
+                    ParticularId = societyLedger.LedgerAccountId ?? 1,
                     PayId = nextPayId,
                     SocietyId = dto.SocietyId,
                     BankId = (int)dto.BankId,
@@ -185,12 +187,12 @@ namespace FintcsApi.Services.Implementations
 
                 var transaction5 = new LedgerTransaction
                 {
-                    LedgerAccountId = societyLedger.LedgerAccountId,
+                    LedgerAccountId = societyLedger.LedgerAccountId ?? 1,
                     MemberId = dto.MemberId,
                     LoanId = 0,
                     Debit = dto.Amount,
                     Credit = dto.Amount,
-                    ParticularId = societyLedger.LedgerAccountId,
+                    ParticularId = societyLedger.LedgerAccountId ?? 1,
                     PayId = nextPayId,
                     SocietyId = dto.SocietyId,
                     BankId = (int)dto.BankId,

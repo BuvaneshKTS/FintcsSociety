@@ -293,16 +293,16 @@ namespace FintcsApi.Services.Implementations
                 // now i need to add amount to ledger account using the transaction.LedgerAccountId
 
                 var societyLedger = await _context.LedgerAccounts
-                    .FirstOrDefaultAsync(la => la.AccountName == "Society Cash Account");
+                    .FirstOrDefaultAsync(la => la.AccountName == "Society Account");
 
                 var transaction1 = new LedgerTransaction
                 {
-                    LedgerAccountId = societyLedger?.LedgerAccountId ?? 0,
+                    LedgerAccountId = societyLedger.LedgerAccountId ?? 1,
                     MemberId = loan.MemberId,
                     LoanId = loan.LoanId,
                     Debit = loan.LoanAmount,
                     Credit = 0,
-                    ParticularId = societyLedger?.LedgerAccountId ?? 0,
+                    ParticularId = societyLedger.LedgerAccountId ?? 1,
                     PayId = nextPayId,
                     SocietyId = dto.SocietyId,
                     BankId = dto.Bank,
