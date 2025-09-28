@@ -1,25 +1,18 @@
-# Stage 1: Build
+# Use official .NET SDK image to build the app
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy csproj and restore as distinct layers
-COPY FintcsApi/FintcsApi.csproj ./FintcsApi/
-COPY fintcss.sln ./
-RUN dotnet restore ./FintcsApi/FintcsApi.csproj
-
-# Copy everything else
+# Copy everything
 COPY . .
 
-# Build and publish
-WORKDIR /src/FintcsApi
-RUN dotnet publish -c Release -o /app/publish
+# Restore dependencies
+RUN dotnet restore "FintcsApi.csproj"
 
-# Stage 2: Runtime
+# Build and publish
+RUN dotnet publish "FintcsApi.csproj" -c Release -o /app/publish
+
+# Final runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
-
-EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
-
 ENTRYPOINT ["dotnet", "FintcsApi.dll"]
