@@ -17,7 +17,7 @@ namespace FintcsApi.Services.Interfaces
         Task<ApiResponse<List<MemberDto>>> GetAllMembersBySocietyAsync(int societyId);
 
         // Update an existing member by Id
-        Task<ApiResponse<bool>> UpdateMemberAsync(int memberId, MemberCreateUpdateDto dto);
+        Task<ApiResponse<bool>> UpdateMemberAsync(int memberId, MemberUpdateDto dto);
 
         // Delete a member by Id
         Task<ApiResponse<bool>> DeleteMemberAsync(int memberId);

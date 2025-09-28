@@ -87,41 +87,46 @@ namespace FintcsApi.Services.Implementations
         }
 
         // Update member
-        public async Task<ApiResponse<bool>> UpdateMemberAsync(int memberId, MemberCreateUpdateDto dto)
+        public async Task<ApiResponse<bool>> UpdateMemberAsync(int memberId, MemberUpdateDto dto)
         {
             var member = await _context.Members.FindAsync(memberId);
-            if (member == null) return ApiResponse<bool>.ErrorResponse("Member not found");
+            if (member == null) 
+                return ApiResponse<bool>.ErrorResponse("Member not found");
 
-            member.Name = dto.Name;
-            member.FHName = dto.FHName;
-            member.Mobile = dto.Mobile;
-            member.Email = dto.Email;
-            member.Status = dto.Status;
-            member.OfficeAddress = dto.OfficeAddress;
-            member.City = dto.City;
-            member.PhoneOffice = dto.PhoneOffice;
-            member.Branch = dto.Branch;
-            member.PhoneRes = dto.PhoneRes;
-            member.Designation = dto.Designation;
-            member.ResidenceAddress = dto.ResidenceAddress;
-            member.DOB = dto.DOB;
-            member.DOJSociety = dto.DOJSociety;
-            member.DOR = dto.DOR;
-            member.Nominee = dto.Nominee;
-            member.NomineeRelation = dto.NomineeRelation;
-            member.CdAmount = dto.CdAmount;
-            member.Email2 = dto.Email2;
-            member.Mobile2 = dto.Mobile2;
-            member.Pincode = dto.Pincode;
-            member.BankName = dto.BankName;
-            member.AccountNumber = dto.AccountNumber;
-            member.PayableAt = dto.PayableAt;
-            member.Share = dto.Share;
+            // Only update fields that are not null
+            if (dto.Name != null) member.Name = dto.Name;
+            if (dto.FHName != null) member.FHName = dto.FHName;
+            if (dto.Mobile != null) member.Mobile = dto.Mobile;
+            if (dto.Email != null) member.Email = dto.Email;
+            if (dto.Status != null) member.Status = dto.Status;
+            if (dto.OfficeAddress != null) member.OfficeAddress = dto.OfficeAddress;
+            if (dto.City != null) member.City = dto.City;
+            if (dto.PhoneOffice != null) member.PhoneOffice = dto.PhoneOffice;
+            if (dto.Branch != null) member.Branch = dto.Branch;
+            if (dto.PhoneRes != null) member.PhoneRes = dto.PhoneRes;
+            if (dto.Designation != null) member.Designation = dto.Designation;
+            if (dto.ResidenceAddress != null) member.ResidenceAddress = dto.ResidenceAddress;
+            if (dto.DOB.HasValue) member.DOB = dto.DOB.Value;
+            if (dto.DOJSociety.HasValue) member.DOJSociety = dto.DOJSociety.Value;
+            if (dto.DOR.HasValue) member.DOR = dto.DOR.Value;
+            if (dto.Nominee != null) member.Nominee = dto.Nominee;
+            if (dto.NomineeRelation != null) member.NomineeRelation = dto.NomineeRelation;
+            if (dto.CdAmount.HasValue) member.CdAmount = dto.CdAmount.Value;
+            if (dto.Email2 != null) member.Email2 = dto.Email2;
+            if (dto.Mobile2 != null) member.Mobile2 = dto.Mobile2;
+            if (dto.Pincode != null) member.Pincode = dto.Pincode;
+            if (dto.BankName != null) member.BankName = dto.BankName;
+            if (dto.AccountNumber != null) member.AccountNumber = dto.AccountNumber;
+            if (dto.PayableAt != null) member.PayableAt = dto.PayableAt;
+            if (dto.Share.HasValue) member.Share = dto.Share.Value;
+
             member.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+
             return ApiResponse<bool>.SuccessResponse(true, "Member updated successfully");
         }
+
 
         // Delete member
         public async Task<ApiResponse<bool>> DeleteMemberAsync(int memberId)

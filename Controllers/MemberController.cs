@@ -45,7 +45,7 @@ namespace FintcsApi.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateMember(int id, [FromBody] MemberCreateUpdateDto dto)
+        public async Task<IActionResult> UpdateMember(int id, [FromBody] MemberUpdateDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

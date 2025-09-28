@@ -110,7 +110,11 @@ namespace FintcsApi.Services.Implementations
                 _context.LedgerAccounts.Update( societyLedger);
                 await _context.SaveChangesAsync();
             }
-            else if(dto.VoucherType == "Receipt"){
+            else if(dto.VoucherType == "Receipt")
+            {
+                Console.WriteLine("=== RECEIPT FLOW STARTED ===");
+
+                // First LedgerTransaction (Debit to Member/Particular)
                 var transaction2 = new LedgerTransaction
                 {
                     LedgerAccountId = dto.ParticularId,
@@ -127,15 +131,22 @@ namespace FintcsApi.Services.Implementations
                     TransactionDate = DateTime.UtcNow
                 };
 
+                Console.WriteLine($"[Transaction2] Debit={transaction2.Debit}, Credit={transaction2.Credit}, " +
+                                $"LedgerAccountId={transaction2.LedgerAccountId}, VoucherId={transaction2.VoucherId}");
+
                 _context.LedgerTransactions.Add(transaction2);
                 await _context.SaveChangesAsync();
+                Console.WriteLine("Transaction2 saved ✅");
 
+                // Update other ledger balance
                 otherLedger.Balance = otherLedger.Balance + (int)dto.Amount;
+                Console.WriteLine($"[OtherLedger] New Balance={otherLedger.Balance}");
+
                 _context.LedgerAccounts.Update(otherLedger);
                 await _context.SaveChangesAsync();
+                Console.WriteLine("OtherLedger updated ✅");
 
-
-
+                // Second LedgerTransaction (Credit to Society/Cash)
                 var transaction3 = new LedgerTransaction
                 {
                     LedgerAccountId = 1,
@@ -152,13 +163,24 @@ namespace FintcsApi.Services.Implementations
                     TransactionDate = DateTime.UtcNow
                 };
 
+                Console.WriteLine($"[Transaction3] Debit={transaction3.Debit}, Credit={transaction3.Credit}, " +
+                                $"LedgerAccountId={transaction3.LedgerAccountId}, VoucherId={transaction3.VoucherId}");
+
                 _context.LedgerTransactions.Add(transaction3);
                 await _context.SaveChangesAsync();
+                Console.WriteLine("Transaction3 saved ✅");
 
-                 societyLedger.Balance += dto.Amount; // assuming Credit increases balance
-                _context.LedgerAccounts.Update( societyLedger);
+                // Update society ledger balance
+                societyLedger.Balance += dto.Amount; // assuming Credit increases balance
+                Console.WriteLine($"[SocietyLedger] New Balance={societyLedger.Balance}");
+
+                _context.LedgerAccounts.Update(societyLedger);
                 await _context.SaveChangesAsync();
+                Console.WriteLine("SocietyLedger updated ✅");
+
+                Console.WriteLine("=== RECEIPT FLOW COMPLETED ===");
             }
+
             else if(dto.VoucherType == "Journel"){
                 var transaction4 = new LedgerTransaction
                 {
@@ -215,5 +237,6 @@ namespace FintcsApi.Services.Implementations
 
             return voucher;
         }
+        
     }
 }
