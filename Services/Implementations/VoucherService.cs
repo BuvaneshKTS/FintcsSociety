@@ -237,6 +237,24 @@ namespace FintcsApi.Services.Implementations
 
             return voucher;
         }
+
+        public async Task<Voucher?> GetVoucherByIdAsync(int id)
+        {
+            return await _context.Vouchers
+                .Include(v => v.Member)
+                .Include(v => v.Loan)
+                .FirstOrDefaultAsync(v => v.VoucherId == id);
+        }
+
+        public async Task<IEnumerable<Voucher>> GetAllVouchersAsync()
+        {
+            return await _context.Vouchers
+                .Include(v => v.Member)
+                .Include(v => v.Loan)
+                .OrderByDescending(v => v.CreatedAt)
+                .ToListAsync();
+        }
+
         
     }
 }

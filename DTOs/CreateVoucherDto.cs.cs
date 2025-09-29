@@ -11,6 +11,7 @@ namespace FintcsApi.DTOs
         // [Required]
         // public int PayId { get; set; }                 // Payment reference
 
+        // [Required]
         public int? LedgerAccountId { get; set; }
 
         public int ParticularId { get; set; }

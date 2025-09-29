@@ -16,6 +16,8 @@ namespace FintcsApi.Data
         public DbSet<LedgerAccount> LedgerAccounts { get; set; } = default!;
         public DbSet<LedgerTransaction> LedgerTransactions { get; set; } = default!;
         public DbSet<Voucher> Vouchers { get; set; } = default!;
+        public DbSet<Demand> Demands { get; set; } = default!;
+
 
 
 

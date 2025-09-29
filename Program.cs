@@ -25,6 +25,7 @@ builder.Services.AddScoped<ILoanTypeService, LoanTypeService>();
 builder.Services.AddScoped<IBankAccountService, BankAccountService>();
 builder.Services.AddScoped<ILedgerService, LedgerService>();
 builder.Services.AddScoped<IVoucherService, VoucherService>();
+builder.Services.AddScoped<IDemandService, DemandService>();
 
 // ------------------- Configure JWT -------------------
 var jwtKey = builder.Configuration["Jwt:Key"] 

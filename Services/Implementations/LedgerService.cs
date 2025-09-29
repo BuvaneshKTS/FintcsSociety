@@ -37,7 +37,8 @@ namespace FintcsApi.Services.Implementations
                 "Building Fund Ledger",
                 "CD Ledger",
                 "OD Ledger",
-                "Share Ledger"
+                "Share Ledger",
+                "Penel Ledger"
             };
 
             foreach (var ledgerName in defaultLedgers)
