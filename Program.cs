@@ -68,7 +68,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSwagger", policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "http://localhost:5000", "https://fintcs.kritatechnosolutions.com") // adjust your ports
+        policy.WithOrigins("https://fintcs.kritatechnosolutions.com", "http://localhost:4200", "http://localhost:5000") // adjust your ports
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
