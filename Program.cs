@@ -54,23 +54,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // ------------------- Configure CORS -------------------
-// builder.Services.AddCors(options =>
-// {
-//     options.AddDefaultPolicy(policy =>
-//     {
-//         policy.AllowAnyOrigin()   // allows all origins
-//               .AllowAnyHeader()   // allows all headers
-//               .AllowAnyMethod();  // allows all HTTP methods
-//     });
-// });
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSwagger", policy =>
+    options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("https://fintcs.kritatechnosolutions.com", "http://localhost:4200", "http://localhost:5000") // adjust your ports
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.AllowAnyOrigin()   // allows all origins
+              .AllowAnyHeader()   // allows all headers
+              .AllowAnyMethod();  // allows all HTTP methods
     });
 });
 
